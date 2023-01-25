@@ -50,9 +50,9 @@ class SignInScreen(tkinter.Toplevel):
             self.parent.client_socket.send(str_insert.encode())#sending line 41
             data = self.parent.client_socket.recv(1024).decode()#recived success or failed
             print(data)
-            self.open_menu_teacher_screen()
-            # if data == "success Sign up teacher":
-            #     self.open_menu_teacher_screen()
+            #self.open_menu_teacher_screen()
+            if data == "success Sign in":
+                self.open_menu_teacher_screen()
         elif self.radio.get() == 2:
             arr = ["sign_in_student", self.entry_id.get(), self.entry_password.get()]
             str_insert = ",".join(arr)
@@ -60,6 +60,8 @@ class SignInScreen(tkinter.Toplevel):
             self.parent.client_socket.send(str_insert.encode())
             data = self.parent.client_socket.recv(1024).decode()
             print(data)
+            if data == "success Sign in":
+                self.open_menu_teacher_screen()
 
 
     def open_menu_teacher_screen(self):

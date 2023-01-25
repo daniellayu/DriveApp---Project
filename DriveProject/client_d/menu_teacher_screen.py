@@ -9,5 +9,6 @@ class MenuTeacher(tkinter.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.geometry('400x400')
-        self.title('Signin')
+        self.geometry('500x500')
+        self.title('Menu Teacher Screen')
+
