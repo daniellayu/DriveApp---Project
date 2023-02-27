@@ -152,8 +152,7 @@ class Cities(object):
 
 def inner():
     conn = sqlite3.connect('test.db')
-    str1 = (
-        """ SELECT restaurantId, restaurantType, numOfWorkres, City.cityname FROM City INNER JOIN flights ON flights.cityId = City.Id """)
+    str1 = (""" SELECT restaurantId, restaurantType, numOfWorkres, City.cityname FROM City INNER JOIN flights ON flights.cityId = City.Id """)
     print(str1)
     x = conn.execute(str1)
     for row in x:

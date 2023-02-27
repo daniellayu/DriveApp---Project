@@ -1,14 +1,14 @@
 import tkinter
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 
-class StudentsList(tkinter.Toplevel):
+class LessonsList(tkinter.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
         self.geometry('700x400')
-        self.title('Students List Screen')
+        self.title('Lessons List Screen')
         self.table = ttk.Treeview(self, columns=("c1", "c2", "c3", "c4", "c5", "c6"), show="headings", heigh="7")
         self.table.column("#1", anchor=CENTER, width=100)
         self.table.column("#2", anchor=CENTER, width=100)
@@ -16,23 +16,20 @@ class StudentsList(tkinter.Toplevel):
         self.table.column("#4", anchor=CENTER, width=100)
         self.table.column("#5", anchor=CENTER, width=100)
         self.table.column("#6", anchor=CENTER, width=100)
-        self.table.heading("#1", text="studentId")
-        self.table.heading("#2", text="first name")
-        self.table.heading("#3", text="last name")
-        self.table.heading("#4", text="email")
-        self.table.heading("#5", text="phone number")
-        self.table.heading("#6", text="id")
+        self.table.heading("#1", text="lessonId")
+        self.table.heading("#2", text="teacherId")
+        self.table.heading("#3", text="studentId")
+        self.table.heading("#4", text="date")
+        self.table.heading("#5", text="time")
+        self.table.heading("#6", text="price")
         self.table.place(x=45, y=100)
         self.listbox()
         self.btn_close = Button(self, text="Close", background="red", command=self.close)
         self.btn_close.place(x=650, y=370)
-        Label(self, text="first name:").place(x=125, y=35)
-        self.entry_fname = Entry(self)
-        self.entry_fname.place(x=150, y=35)
 
 
     def listbox(self):
-        arr = ["students_list"]
+        arr = ["lessons_list"]
         str = ",".join(arr)
         print(str)
         self.parent.parent.parent.client_socket.send(str.encode())

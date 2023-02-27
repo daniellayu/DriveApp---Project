@@ -88,11 +88,11 @@ class LessonsDb(object):
         pass
 
 
-l = LessonsDb()
+#l = LessonsDb()
 #l.insert_lesson("2", "1", "11.02.2022", "11:30", "170")
 #x = l.get_all_lessons()
 #print(x)
 #y = l.get_price()
 #print(y)
 #print(x[0][0])#1
-l.delete_lesson_by_id(2)
+#l.delete_lesson_by_id(2)

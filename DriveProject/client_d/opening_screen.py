@@ -20,7 +20,7 @@ class OpeningScreen(tkinter.Tk):
         self.image = ImageTk.PhotoImage(self.size)
         self.label_image = Label(self, image=self.image).place(x=100, y=50)
 
-        #self.handle_thread_socket()
+        self.handle_thread_socket()
         #self.frame1 = Frame(self, width=300, height=300, bg="blue")
         self.btn_sign_in = Button(self, text='Sign in', background="mint cream", width=13, heigh=2, command=self.open_sign_in)
         self.btn_sign_in.place(x=200, y=350)

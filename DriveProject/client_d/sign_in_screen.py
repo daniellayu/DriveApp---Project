@@ -5,6 +5,7 @@ from DriveProject.server_d.teacherdb import TeacherDb
 from DriveProject.server_d.studentdb import StudentDb
 import threading
 from menu_teacher_screen import MenuTeacher
+from menu_student_screen import MenuStudent
 
 
 class SignInScreen(tkinter.Toplevel):
@@ -20,7 +21,7 @@ class SignInScreen(tkinter.Toplevel):
         self.entry_id = Entry(self)
         self.entry_id.place(x=150, y=150)
         Label(self, text="Password", background="light blue").place(x=75, y=200)
-        self.entry_password = Entry(self)
+        self.entry_password = Entry(self, show='*')
         self.entry_password.place(x=150, y=200)
         self.radio = IntVar()
         self.trb = Radiobutton(self, text="teacher", value=1, variable=self.radio).place(x=100, y=250)
@@ -28,9 +29,7 @@ class SignInScreen(tkinter.Toplevel):
         self.btn_signin = Button(self, text="Sign in", background="light pink", command=self.sign_in).place(x=170, y=275)
         self.btn_close = Button(self, text="Close", background="red", command=self.close)
         self.btn_close.place(x=170, y=325)
-        self.str = StringVar()
-        self.str.set("")
-        Label(self, textvariable=self.str, background="pink").place(x=150, y=375)
+
 
     def handle_add_user(self):
         self.client_handler = threading.Thread(target=self.sign_in, args=())
@@ -50,18 +49,21 @@ class SignInScreen(tkinter.Toplevel):
             self.parent.client_socket.send(str_insert.encode())#sending line 41
             data = self.parent.client_socket.recv(1024).decode()#recived success or failed
             print(data)
-            #self.open_menu_teacher_screen()
             if data == "success Sign in":
                 self.open_menu_teacher_screen()
-        elif self.radio.get() == 2:
+            if data == "failed Sign in":
+                messagebox.showerror("error", "teacher not exist, please sign up")
+        if self.radio.get() == 2:
             arr = ["sign_in_student", self.entry_id.get(), self.entry_password.get()]
             str_insert = ",".join(arr)
             print(str_insert)
             self.parent.client_socket.send(str_insert.encode())
-            data = self.parent.client_socket.recv(1024).decode()
+            data = self.parent.client_socket.recv(1024).decode()#recived success or failed
             print(data)
             if data == "success Sign in":
-                self.open_menu_teacher_screen()
+                self.open_menu_student_screen()
+            if data == "failed Sign in":
+                messagebox.showerror("error", "student not exist, please sign up")
 
 
     def open_menu_teacher_screen(self):
@@ -69,6 +71,11 @@ class SignInScreen(tkinter.Toplevel):
         window.grab_set()
         self.withdraw()
 
+
+    def open_menu_student_screen(self):
+        window = MenuStudent(self)
+        window.grab_set()
+        self.withdraw()
 
 
     def close(self):
