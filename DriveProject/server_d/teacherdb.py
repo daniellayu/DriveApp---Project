@@ -85,11 +85,11 @@ class TeacherDb(object):
             print("failed to delete teacher by id")
             return False
 
-    def update_by_id(self, teacher_id, price, experience):
+    def update_by_id(self, id, price, experience):
         try:
             connection = sqlite3.connect("database.db")
             cursor = connection.cursor()
-            update_query = f"UPDATE {self.__tablename} SET {self.__price} = {price}, {self.__experience} = {experience} WHERE {self.__teacherId} = {teacher_id}"
+            update_query = f"UPDATE {self.__tablename} SET {self.__price} = {price}, {self.__experience} = {experience} WHERE {self.__Id} = {id}"
             cursor.execute(update_query)
             connection.commit()
             connection.close()
@@ -132,13 +132,33 @@ class TeacherDb(object):
             return "failed to get teacher id by name"
 
 
+    #teacher_id as PRIMARY KEY and id as ID
+    def get_teacher_id_by_id(self, id):
+        try:
+            conn = sqlite3.connect('database.db')
+            print("Opened database successfully")
+            str = f"SELECT {self.__teacherId} from {self.__tablename} where {self.__Id} = '{id}'"
+            print(str)
+            cursor = conn.execute(str)
+            row = cursor.fetchall()
+            if row:
+                print(row[0][0])
+                return row[0][0]
+            else:
+                print("teacher not found")
+                return False
+        except:
+            return "failed to get teacher id by name"
+
+
+
 
 #t = TeacherDb()
-# t.insert("dani1", "yusu1", "danngi23", "p1", "34551", "1231", "1501", "31")
+#t.insert("dani1", "yusu1", "danngi23", "p1", "34551", "1231", "1501", "31")
 #x = t.get_all_teachers()
 #print(x)
 #print(x[0][0])#1
 #t.delete_by_id(1)
-#.update_by_id(2, 160, 11)
+#t.update_by_id(1, 160, 11)
 #t.get_teacher_id_by_name("q") #2
 

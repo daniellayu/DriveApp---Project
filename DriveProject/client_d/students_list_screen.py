@@ -7,6 +7,7 @@ class StudentsList(tkinter.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        print(self.parent.parent.id_t)
         self.geometry('700x400')
         self.title('Students List Screen')
         self.table = ttk.Treeview(self, columns=("c1", "c2", "c3", "c4", "c5", "c6"), show="headings", heigh="7")
@@ -26,16 +27,14 @@ class StudentsList(tkinter.Toplevel):
         self.listbox()
         self.btn_close = Button(self, text="Close", background="red", command=self.close)
         self.btn_close.place(x=650, y=370)
-        Label(self, text="first name:").place(x=125, y=35)
-        self.entry_fname = Entry(self)
-        self.entry_fname.place(x=150, y=35)
+
 
 
     def listbox(self):
-        arr = ["students_list"]
-        str = ",".join(arr)
-        print(str)
-        self.parent.parent.parent.client_socket.send(str.encode())
+        arr = ["students_list", self.parent.parent.id_t]
+        str1 = arr[0]+","+(arr[1])
+        print(str1)
+        self.parent.parent.parent.client_socket.send(str1.encode())
         data = self.parent.parent.parent.client_socket.recv(1024).decode()
         print(data)
         arr_data = data.split("-")
@@ -45,6 +44,7 @@ class StudentsList(tkinter.Toplevel):
         for item in arr_data:
             line1 = item.split(",")
             self.table.insert("", 'end', text="1", values=(line1[0], line1[1], line1[2], line1[3], line1[4], line1[5]))
+
 
 
     def close(self):

@@ -1,13 +1,13 @@
 import tkinter
 from tkinter import *
 from tkinter import ttk, messagebox
-import threading
 
 
 class ChooseTeacher(tkinter.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        print(self.parent.parent.id_s)
         print(self.parent.parent.parent.client_socket)
         self.geometry('800x400')
         self.title('Choose Teacher Screen')
@@ -38,10 +38,21 @@ class ChooseTeacher(tkinter.Toplevel):
         curItem = self.table.focus()
         print(curItem)
         print(self.table.item(curItem)['values'])
-        messagebox.showinfo("showinfo", "you signed to "+self.table.item(curItem)['values'][1])
-        self.close()
-        #teacher_id = self.table.item(curItem)['values'][0]
-        #print("Teacher ID:", teacher_id)
+        x = self.table.item(curItem)['values']
+        print(x[0])
+        arr = ["update_teacher_id", x[0], self.parent.parent.id_s]
+        print(arr)
+        str1 = arr[0]+","+str(arr[1])+","+arr[2]
+        print(str1)
+        self.parent.parent.parent.client_socket.send(str1.encode())
+        data = self.parent.parent.parent.client_socket.recv(1024).decode()  # recived success or failed
+        print(data)
+        if data == "success update teacher id":
+            messagebox.showinfo("showinfo", "you signed to " + self.table.item(curItem)['values'][1] + self.table.item(curItem)['values'][2])
+            self.close()
+        if data == "failed update teacher id":
+            messagebox.showerror("error", "error")
+
 
     def listbox(self):
         arr = ["teachers_list"]
@@ -55,7 +66,6 @@ class ChooseTeacher(tkinter.Toplevel):
         line1 = arr_data[0].split(",")
         print(line1)
         for item in arr_data:
-            #self.b = Button(self, text="select", background="red", command=self.select_teacher)
             line1 = item.split(",")
             self.table.insert("", 'end', text="1", values=(line1[0], line1[1], line1[2], line1[3], line1[4], line1[5], line1[6]))
 

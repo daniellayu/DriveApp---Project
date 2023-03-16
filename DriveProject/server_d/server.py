@@ -53,6 +53,7 @@ class Server(object):
                     client_socket.send("success Sign up teacher".encode())
                 elif server_data:
                     client_socket.send("failed Sign up teacher".encode())
+
             elif arr and len(arr) == 7 and arr[0] == "sign_up_student":
                 server_data = self.studentdb.insert(arr[1], arr[2], arr[3], arr[4], arr[5], arr[6])
                 print("Server data: ", server_data)
@@ -60,6 +61,7 @@ class Server(object):
                     client_socket.send("success Sign up student".encode())
                 elif server_data:
                     client_socket.send("failed Sign up student".encode())
+
             elif arr and len(arr) == 3 and arr[0] == "sign_in_teacher":
                 server_data = self.teacherdb.is_exist(arr[1], arr[2])
                 print("Server data: ", server_data)  # true or false
@@ -67,6 +69,7 @@ class Server(object):
                     client_socket.send("success Sign in".encode())
                 elif server_data:
                     client_socket.send("failed Sign in".encode())
+
             elif arr and len(arr) == 3 and arr[0] == "sign_in_student":
                 server_data = self.studentdb.is_exist(arr[1], arr[2])
                 print("Server data: ", server_data)
@@ -74,29 +77,42 @@ class Server(object):
                     client_socket.send("success Sign in".encode())
                 elif server_data:
                     client_socket.send("failed Sign in".encode())
-            elif arr and len(arr) == 1 and arr[0] == "students_list":
-                server_data = self.studentdb.get_all_students()
+
+            elif arr and len(arr) == 2 and arr[0] == "students_list":
+                server_data = self.teacherdb.get_teacher_id_by_id(arr[1])
                 print("Server data: ", server_data)
+                server_data2 = self.studentdb.get_students_by_teacher_id(server_data)
+                print("Server data2: ", server_data2)
                 # Use list comprehension to join each tuple with the delimiter
-                string_data = '-'.join([','.join(map(str, item)) for item in server_data])
+                string_data2 = '-'.join([','.join(map(str, item)) for item in server_data2])
+                print(string_data2)
+                client_socket.send(string_data2.encode())
+
+            elif arr and len(arr) == 2 and arr[0] == "lessons_list":
+                server_data = self.teacherdb.get_teacher_id_by_id(arr[1])
+                print("Server data: ", server_data)
+                server_data2 = self.lessonsdb.get_lessons_by_teacher_id(server_data)
+                print("Server data2: ", server_data2)
+                # Use list comprehension to join each tuple with the delimiter
+                string_data = '-'.join([','.join(map(str, item)) for item in server_data2])
                 print(string_data)
                 client_socket.send(string_data.encode())
-            elif arr and len(arr) == 1 and arr[0] == "lessons_list":
-                server_data = self.lessonsdb.get_all_lessons()
+
+            elif arr and len(arr) == 2 and arr[0] == "student_id_to_name":
+                server_data = self.studentdb.get_student_name_by_id(arr[1])
                 print("Server data: ", server_data)
-                # Use list comprehension to join each tuple with the delimiter
-                string_data = '-'.join([','.join(map(str, item)) for item in server_data])
-                print(string_data)
-                client_socket.send(string_data.encode())
+                client_socket.send(server_data.encode())
+
             elif arr and len(arr) == 4 and arr[0] == "update_details":
-                server_data = self.teacherdb.get_teacher_id_by_name(arr[1])
+                # server_data = self.teacherdb.get_teacher_id_by_name(arr[1])
+                # print("Server data: ", server_data)
+                server_data = self.teacherdb.update_by_id(arr[1], arr[2], arr[3]) #return false
                 print("Server data: ", server_data)
-                server_data2 = self.teacherdb.update_by_id(server_data, arr[2], arr[3]) #return false
-                print("Server data: ", server_data2)
-                if server_data2:
+                if server_data:
                     client_socket.send("success update details".encode())
                 elif server_data:
                     client_socket.send("failed update details".encode())
+
             elif arr and len(arr) == 1 and arr[0] == "teachers_list":
                 server_data = self.teacherdb.get_all_teachers()
                 print("Server data: ", server_data)
@@ -105,14 +121,31 @@ class Server(object):
                 print(string_data)
                 client_socket.send(string_data.encode())
 
+            elif arr and len(arr) == 3 and arr[0] == "update_teacher_id":
+                server_data = self.studentdb.update_teacher_id(arr[1], arr[2])
+                print("Server data: ", server_data)
+                if server_data:
+                    client_socket.send("success update teacher id".encode())
+                elif server_data:
+                    client_socket.send("failed update teacher id".encode())
+
+            elif arr and len(arr) == 2 and arr[0] == "delete_lesson_t":
+                server_data = self.lessonsdb.delete_lesson_by_id(arr[1])
+                print(server_data)
+                if server_data:
+                    client_socket.send("succeed to delete lesson".encode())
+                elif server_data:
+                    client_socket.send("failed to delete lesson".encode())
+
+            elif arr and len (arr) == 4 and arr[0] == "change_lesson_details":
+                server_data = self.lessonsdb.change_lesson_details(arr[1], arr[2], arr[3])
+                print(server_data)
+                if server_data:
+                    client_socket.send("succeed to change lesson details".encode())
+                elif server_data:
+                    client_socket.send("failed to change lesson details".encode())
 
 
-                # server_data = self.teacherdb.update_by_id(arr[1], arr[2], arr[3])
-                # print("Server data: ", server_data)
-                # if server_data:
-                #     client_socket.send("success update details".encode())
-                # elif server_data:
-                #     client_socket.send("failed update details".encode())
             else:
                 print(arr)
                 self.send_message("error message", client_socket)

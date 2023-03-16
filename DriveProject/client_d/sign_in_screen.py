@@ -12,6 +12,8 @@ class SignInScreen(tkinter.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        self.id_s = "0"
+        self.id_t = "0"
         self.teacherdb = TeacherDb()
         self.studentdb = StudentDb()
         self.geometry('400x400')
@@ -49,6 +51,7 @@ class SignInScreen(tkinter.Toplevel):
             self.parent.client_socket.send(str_insert.encode())#sending line 41
             data = self.parent.client_socket.recv(1024).decode()#recived success or failed
             print(data)
+            self.id_t = self.entry_id.get()
             if data == "success Sign in":
                 self.open_menu_teacher_screen()
             if data == "failed Sign in":
@@ -60,6 +63,7 @@ class SignInScreen(tkinter.Toplevel):
             self.parent.client_socket.send(str_insert.encode())
             data = self.parent.client_socket.recv(1024).decode()#recived success or failed
             print(data)
+            self.id_s = self.entry_id.get()
             if data == "success Sign in":
                 self.open_menu_student_screen()
             if data == "failed Sign in":

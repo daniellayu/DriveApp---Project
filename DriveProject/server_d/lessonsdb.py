@@ -65,6 +65,22 @@ class LessonsDb(object):
             print("failed to get all lessons")
             return False
 
+
+    def get_lessons_by_teacher_id(self, teacher_id):
+        try:
+            connection = sqlite3.connect("database.db")
+            cursor = connection.cursor()
+            select_query = f"SELECT * FROM {self.__tablename} WHERE {self.__teacherId} = {teacher_id}"
+            cursor.execute(select_query)
+            teachers = cursor.fetchall()
+            connection.close()
+            print("succeed to get all lessons")
+            return teachers
+        except:
+            print("failed to get all lessons")
+            return False
+
+
     def delete_lesson_by_id(self, lesson_id):
         try:
             connection = sqlite3.connect("database.db")
@@ -79,6 +95,35 @@ class LessonsDb(object):
             print("failed to delete lesson by id")
             return False
 
+    def change_lesson_details(self, lesson_id, date, time):
+        try:
+            connection = sqlite3.connect("database.db")
+            cursor = connection.cursor()
+            update_query = f"UPDATE {self.__tablename} SET {self.__date} = ?, {self.__time} = ? WHERE {self.__lessonId} = ?"
+            cursor.execute(update_query, (date, time, lesson_id))
+            connection.commit()
+            connection.close()
+            print("succeeded to update date")
+            return True
+        except:
+            print("failed to update date")
+            return False
+
+
+    def update_time(self, lesson_id, time):
+        try:
+            connection = sqlite3.connect("database.db")
+            cursor = connection.cursor()
+            update_query = f"UPDATE {self.__tablename} SET {self.__time} = ? WHERE {self.__lessonId} = ?"
+            cursor.execute(update_query, (time, lesson_id))
+            connection.commit()
+            connection.close()
+            print("succeeded to update time")
+            return True
+        except:
+            print("failed to update time")
+            return False
+
 
     def get_price(self):
         return self.__price
@@ -88,11 +133,20 @@ class LessonsDb(object):
         pass
 
 
+    def last_lessons(self):
+        pass
+
+
 #l = LessonsDb()
-#l.insert_lesson("2", "1", "11.02.2022", "11:30", "170")
+#l.insert_lesson("3", "3", "13.4.2022", "10:00", "180")
+#l.insert_lesson("3", "1", "4.5.2022", "15:30", "170")
 #x = l.get_all_lessons()
 #print(x)
 #y = l.get_price()
 #print(y)
 #print(x[0][0])#1
 #l.delete_lesson_by_id(2)
+#l.update_date(3, "08.09.2022")
+#l.update_time(4, "14:00")
+#l.get_lessons_by_teacher_id(3)
+#l.change_lesson_details(7, "6.12.2022", "12:20")
